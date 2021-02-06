@@ -1,0 +1,57 @@
+.GameBoard{
+    height: $edge;
+    width: $edge;
+    background-color: #141485;
+    flex-direction: column;
+    padding-bottom: 5%;
+    margin: 0px 20px;
+    border-radius: 20px;
+
+    h2{
+        margin-bottom: 4%;
+        color: white;
+        letter-spacing: 2px;
+    }
+    .grids{
+        display: grid;
+        grid-template-columns: repeat($numGrids, 1fr);
+        grid-template-rows: repeat($numGrids, 1fr);
+        height: 80%;
+        width: 80%;
+    }
+
+    .squares{
+        background-color: #ddd;
+        height: $gridDimension;
+        width: $gridDimension;
+        border: 1px solid black;
+        .target::before{
+            content: '';
+            background-color:rgba($color: #00F, $alpha: 0.8);
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            display: block;
+            position: relative;
+            animation: ripple ease-in 300ms;
+            opacity: 0;
+        }
+        .target{
+            height: 50%;
+            width: 50%;
+            border-radius: 50%;
+            background-color: red;
+        }
+    }
+}
+
+@keyframes ripple{
+    from{
+        transform: scale(1);
+        opacity: 100%;
+    }
+    to{
+        transform: scale(4);
+        opacity: 0;
+    }
+}

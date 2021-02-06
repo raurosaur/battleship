@@ -1,0 +1,30 @@
+$numGrids: 16;
+$edge: 80vmin;
+$gridDimension: (0.8*80/16)vmin;
+
+*,
+*::after,
+*::before{
+    padding: 0;
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body, .App{
+    height: 100vh;
+    background-color: #00F;
+    flex-direction: column;
+}
+
+.flex-center{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+button{
+    width: 30vmin;
+    height: 8vmin;
+    margin-top: 1%;
+    border-radius: 20px;
+}
