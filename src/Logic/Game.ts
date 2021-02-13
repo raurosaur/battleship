@@ -40,7 +40,7 @@ export class Board implements BoardInterface {
     else{
       this.BoardArray = [];
       for (let i = 0; i < size; ++i) {
-        const innerArray = [];
+        const innerArray : boardElement[] = [];
         for (let j = 0; j < size; ++j){
           innerArray.push(getNewBoardElement());
         }

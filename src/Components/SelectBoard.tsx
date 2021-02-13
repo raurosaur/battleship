@@ -6,7 +6,7 @@ const SelectBoard: React.FC<{update: (player :Board) => void}> = ({update}) => {
   let x = 0,
     y = 0;
   //Success in placing Ship
-  let success = true;
+  let success = false, didValidDrop = false;
   //Total Number of Grids => Can be Changed
   const NUM_GRIDS = 10;
   //Squares for Screen : JSX Elements
@@ -64,6 +64,7 @@ const SelectBoard: React.FC<{update: (player :Board) => void}> = ({update}) => {
     e.dataTransfer.setData("text/plain", e.currentTarget.id);
     e.currentTarget.style.backgroundColor = "yellow";
     size = +e.currentTarget.className[e.currentTarget.className.length - 1];
+    didValidDrop = false;
   }
 
   //Name Object
@@ -82,6 +83,7 @@ const SelectBoard: React.FC<{update: (player :Board) => void}> = ({update}) => {
 
   //On Drag Event Handler
   function onDrop(e: React.DragEvent<HTMLDivElement>) {
+    didValidDrop = true;
     const { id } = e.currentTarget;
     let [x, y] = id.split("-").map((el) => +el);
     const newPlayer = new Board(NUM_GRIDS, player);
@@ -91,7 +93,6 @@ const SelectBoard: React.FC<{update: (player :Board) => void}> = ({update}) => {
     isHorizontal
       ? newPlayer.insertShipHorizontal(getName(), x, y, size)
       : newPlayer.insertShipVertical(getName(), x, y, size);
-
     if(!success)return;
 
     setPlayer(newPlayer);
@@ -102,17 +103,15 @@ const SelectBoard: React.FC<{update: (player :Board) => void}> = ({update}) => {
       if (!isHorizontal) x = (x + 1) % NUM_GRIDS;
       else y = (y + 1) % NUM_GRIDS;
     }
-
     setCounter(counter + 1);
     dragDefault(e);
   }
   
   //End Drag Event Handler
   function dragEnd(e: React.DragEvent<HTMLDivElement>) {
-    if(counter === 5)
-     update(player);
-    if(success)e.currentTarget.style.display = "none";
+    if (!didValidDrop || !success) e.currentTarget.style.display = "none";
     else e.currentTarget.style.background = "pink";
+    if(counter === 5) update(player);
   }
   
   //JSX Return Element
