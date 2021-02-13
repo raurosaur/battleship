@@ -12,36 +12,37 @@
         color: white;
         letter-spacing: 2px;
     }
-    .grids{
-        display: grid;
-        grid-template-columns: repeat($numGrids, 1fr);
-        grid-template-rows: repeat($numGrids, 1fr);
-        height: 80%;
-        width: 80%;
-    }
+}
 
-    .squares{
-        background-color: #ddd;
-        height: $gridDimension;
-        width: $gridDimension;
-        border: 1px solid black;
-        .target::before{
-            content: '';
-            background-color:rgba($color: #00F, $alpha: 0.8);
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            display: block;
-            position: relative;
-            animation: ripple ease-in 300ms;
-            opacity: 0;
-        }
-        .target{
-            height: 50%;
-            width: 50%;
-            border-radius: 50%;
-            background-color: red;
-        }
+.grids{
+    display: grid;
+    grid-template-columns: repeat($numGrids, 1fr);
+    grid-template-rows: repeat($numGrids, 1fr);
+    height: 0.8*$edge;
+    width: 0.8*$edge;
+}
+
+.squares{
+    background-color: #ddd;
+    height: $gridDimension;
+    width: $gridDimension;
+    border: 1px solid black;
+    .target::before{
+        content: '';
+        background-color:rgba($color: #00F, $alpha: 0.8);
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        display: block;
+        position: relative;
+        animation: ripple ease-in 300ms;
+        opacity: 0;
+    }
+    .target{
+        height: 50%;
+        width: 50%;
+        border-radius: 50%;
+        background-color: red;
     }
 }
 

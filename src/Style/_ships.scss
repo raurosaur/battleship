@@ -1,0 +1,43 @@
+$dimension: 4vmin;
+.ship-wrapper{
+    position: absolute;
+    top: 20%;
+    left: 5%;
+    *{
+        margin: 0.4em 0;
+    }
+    h2{
+        color: white;
+        transition: transform 200ms ease-in-out;
+        border: 2px solid #fff;
+        padding: 0.5em;
+        border-radius: 5px;
+    }
+    h2:hover, h2:focus{
+        transform: scale(1.1);
+    }
+    button{
+        background-color: cadetblue;
+        font-size: 1.2em;
+        color: #fff;
+    }
+}
+
+.ships{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.ship{
+    outline: 2px solid black;
+    margin: 5px;
+    height: 4vmin;
+    background-color: pink;
+}
+
+@each $i in 5,4,3,3,2{
+    .ship-#{$i} {
+        width: $i* 4vmin;
+    }
+}

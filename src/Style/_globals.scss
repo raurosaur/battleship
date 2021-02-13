@@ -1,6 +1,6 @@
-$numGrids: 16;
+$numGrids: 10;
 $edge: 80vmin;
-$gridDimension: (0.8*80/16)vmin;
+$gridDimension: $numGrids / (0.8*80)vmin;
 
 *,
 *::after,
@@ -22,6 +22,9 @@ body, .App{
     align-items: center;
 }
 
+.fc{
+    flex-direction: column;
+}
 button{
     width: 30vmin;
     height: 8vmin;
