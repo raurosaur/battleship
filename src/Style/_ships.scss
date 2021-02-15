@@ -9,18 +9,19 @@ $dimension: 4vmin;
     h2{
         color: white;
         transition: transform 200ms ease-in-out;
-        border: 2px solid #fff;
+        border: 2px solid $sea-color;
         padding: 0.5em;
         border-radius: 5px;
     }
     h2:hover, h2:focus{
         transform: scale(1.1);
     }
-    button{
-        background-color: cadetblue;
-        font-size: 1.2em;
-        color: #fff;
-    }
+}
+
+button{
+    background-color: $sea-dark-color;
+    font-size: 1.2em;
+    color: #fff;
 }
 
 .ships{
@@ -30,10 +31,11 @@ $dimension: 4vmin;
 }
 
 .ship{
-    outline: 2px solid black;
+    border: 2px solid black;
+    border-radius: 5px;
     margin: 5px;
     height: 4vmin;
-    background-color: pink;
+    background-color: $sea-color;
 }
 
 @each $i in 5,4,3,3,2{

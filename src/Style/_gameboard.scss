@@ -1,9 +1,8 @@
 .GameBoard{
     height: $edge;
-    width: $edge;
-    background-color: #141485;
+    width: 0.9 * $edge;
+    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6));
     flex-direction: column;
-    padding-bottom: 5%;
     margin: 0px 20px;
     border-radius: 20px;
 
@@ -11,6 +10,7 @@
         margin-bottom: 4%;
         color: white;
         letter-spacing: 2px;
+        text-shadow: 2px 2px #260d80;
     }
 }
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { GameBoard } from "./Components/GameBoard";
 import SelectBoard from "./Components/SelectBoard";
 import { Board } from "./Logic/Game";
@@ -9,14 +9,14 @@ export function getRandomIndex(len: number) {
 
 const NUM_BOARD = 10;
 
-interface props{
-}
+interface props {}
 
-interface state{
-    choose: boolean;
-    player: Board;
-    computer: Board;
-    isPlayerTurn: boolean;
+interface state {
+  choose: boolean;
+  player: Board;
+  computer: Board;
+  hasWon: boolean;
+  winner: 'You' | 'Computer' | undefined;
 }
 
 class App extends React.Component<props, state> {
@@ -24,24 +24,15 @@ class App extends React.Component<props, state> {
     choose: true,
     player: new Board(NUM_BOARD),
     computer: new Board(NUM_BOARD),
-    isPlayerTurn: true,
+    hasWon: false,
+    winner: undefined
   };
 
-  constructor(props: props){
-    super(props);
-    this.updatePlayerBoard = this.updatePlayerBoard.bind(this);
-    this.setIsPlayerTurn = this.setIsPlayerTurn.bind(this);
-    this.setComputer = this.setComputer.bind(this);
-  }
-
-  updatePlayerBoard(val: Board) {
+  updatePlayerBoard = (val: Board) => {
     this.setState({ player: val });
-  }
+  };
 
-  componentDidMount(){
-    document.querySelector("h2.player")?.classList.add("green");
-  }
-  generateRandomGame() {
+  generateRandomGame = () => {
     const ships = [
       { size: 5, name: "Carrier", selected: false },
       { size: 4, name: "Battleship", selected: false },
@@ -65,65 +56,83 @@ class App extends React.Component<props, state> {
     }
 
     this.setState({ computer: board });
-  }
+  };
 
-  setIsPlayerTurn(val: boolean) {
-    this.setState({ isPlayerTurn: val });
-  }
+  hit = (didHit: boolean, el: HTMLElement): void => {
+    const color = didHit ? "#f00" : "#fff";
+    const circle = document.createElement("div");
+    circle.classList.add("target");
+    circle.style.background = color;
+    el.appendChild(circle);
+  };
 
-  setComputer(val: Board) {
-    this.setState({ computer: val });
-  }
+  computerPlay = () => {
+    if (this.state.hasWon) return;
+    document.querySelector("h2.computer")?.classList.add("green");
+    document.querySelector("h2.player")?.classList.remove("green");
+    const { player } = this.state;
+    let x = 0,
+      y = 0;
+    while (player.BoardArray[x][y].wasHit) {
+      x = getRandomIndex(NUM_BOARD);
+      y = getRandomIndex(NUM_BOARD);
+    }
+    const newBoard = new Board(NUM_BOARD, player);
+    const didHit = newBoard.hit(x, y);
+    const el = document.getElementById(`player-${x}-${y}`) as HTMLElement;
+    this.hit(didHit, el);
+    this.setState({ player: newBoard });
+    this.setState({ hasWon: newBoard.isGameOver() });
+    if(this.state.hasWon) this.setState({winner: 'Computer'});
+  };
+  
+  handlePlay = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    if (this.state.hasWon) return;
+    document.querySelector("h2.player")?.classList.add("green");
+    document.querySelector("h2.computer")?.classList.remove("green");
+    const id = e.currentTarget.id;
+    const [, x, y] = id.split("-");
+    const newBoard = new Board(NUM_BOARD, this.state.computer);
+    if (newBoard.BoardArray[x][y].wasHit) return;
+    const didHit = newBoard.hit(+x, +y);
+    this.hit(didHit, e.currentTarget);
+    this.setState({ computer: newBoard });
+    this.setState({ hasWon: newBoard.isGameOver() });
+    if(this.state.hasWon) this.setState({winner: 'You'});
+    setTimeout(this.computerPlay, 500);
+  };
 
-  render() {
-    const { choose, player, isPlayerTurn, computer } = this.state;
+  render = () => {
+    const { choose, hasWon, player, winner } = this.state;
 
-    function getComputerHit(){
-      let x = 0, y =  0;
-       while(!player.BoardArray[x][y].wasHit){
-         x = getRandomIndex(NUM_BOARD);
-         y = getRandomIndex(NUM_BOARD);
+    if (!choose) {
+      const playerBoard = document.querySelector('.grids') as HTMLDivElement;
+      if(playerBoard)
+      for (let i = 0; i < NUM_BOARD; i++) {
+        for (let j = 0; j < NUM_BOARD; j++) {
+          if (player.BoardArray[i][j].hasShip){
+            const square = playerBoard.querySelector(`#player-${i}-${j}`) as HTMLDivElement;
+            if(square)square.style.background = "salmon";
+          }
         }
-        const didHit = player.hit(x,y);
-        const el = document.getElementById(`player-${x}-${y}`);
-        const color = didHit ? "#f00" : "#fff";
-        const circle = document.createElement("div");
-        circle.classList.add("target");
-        circle.style.background = color;
-        el!.appendChild(circle);
-     }
+      }
+    }
 
-    if (isPlayerTurn) {
-      document.querySelector("h2.player")?.classList.add("green");
-      document.querySelector("h2.computer")?.classList.remove("green");
-    } else {
-      document.querySelector("h2.computer")?.classList.add("green");
-      document.querySelector("h2.player")?.classList.remove("green");
-      setTimeout(getComputerHit, 500);
+    if(hasWon){
+      document.querySelector('.winner')?.classList.add('show-winner');
     }
     return (
       <div className="App flex-center">
+        <div className="winner flex-center"> {winner} Won! </div>
         {choose ? (
           <SelectBoard update={this.updatePlayerBoard} />
         ) : (
           <div className="flex-center">
-            <GameBoard
-              name="Player"
-              clickable={false}
-              computer = {computer}
-              board={player}
-              setBoard={this.updatePlayerBoard}
-              isPlayerTurn={isPlayerTurn}
-              setIsPlayerTurn={this.setIsPlayerTurn}
-              />
+            <GameBoard name="Player" clickable={false} />
             <GameBoard
               name="Computer"
               clickable={true}
-              board={computer}
-              computer = {computer}
-              setBoard={this.setComputer}
-              isPlayerTurn={isPlayerTurn}
-              setIsPlayerTurn={this.setIsPlayerTurn}
+              clickHandler={this.handlePlay}
             />
           </div>
         )}
@@ -137,6 +146,6 @@ class App extends React.Component<props, state> {
         </button>
       </div>
     );
-  }
+  };
 }
 export default App;

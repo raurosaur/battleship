@@ -35,8 +35,11 @@ export class Board implements BoardInterface {
   readonly boardSize: number;
 
   constructor(size: number, board?: Board) {
-    if(!!board)
-      this.BoardArray = board.BoardArray;
+    if(!!board){
+      this.BoardArray = new Array<Array<boardElement>>(size);
+      for(let i = 0; i < size; ++i)
+        this.BoardArray[i] = [...board.BoardArray[i]];
+    }
     else{
       this.BoardArray = [];
       for (let i = 0; i < size; ++i) {

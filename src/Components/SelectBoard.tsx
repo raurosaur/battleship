@@ -21,6 +21,7 @@ const SelectBoard: React.FC<{update: (player :Board) => void}> = ({update}) => {
       <div
         className="squares flex-center"
         id={`${x}-${y}`} //Set Coordinates as ID
+        key = {`${x}-${y}`}
         onDragOver={dragDefault}
         onDragEnter={dragDefault}
         onDrop={onDrop}
